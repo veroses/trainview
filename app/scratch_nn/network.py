@@ -40,11 +40,9 @@ class Network:
                 print(f"Epoch {epoch} complete")
 
 
-    def update(self, mini_batch):
-        X = np.stack([x for x, y in mini_batch])
-        Y = np.stack([y for x, y in mini_batch])
-        Y = np.squeeze(Y, axis=-1)
-
+    def update(self, inputs, labels):
+        X = inputs
+        Y = labels
         for  layer in self.layers:
             X = layer.forward(X)
 
@@ -63,16 +61,10 @@ class Network:
         return loss
 
 
-    def evaluate(self, test_data, batch_size=32):
-        mini_batches = [test_data[k: k + batch_size] for k in range(0, len(test_data), batch_size)]
-        accuracy = 0
-        for batch in mini_batches:
-            X = np.stack([x for x, y in batch])
-            Y = np.stack([y for x, y in batch])
-            outputs = self.feedforward(X)
-            predicted_labels = np.argmax(outputs, axis=1)
-            true_labels = np.argmax(Y, axis=1).flatten()
-            accuracy += np.sum(predicted_labels == true_labels)
+    def evaluate(self, inputs, labels, count=False):
+        outputs = self.feedforward(inputs)
+        predicted_labels = np.argmax(outputs, axis=1)
+        accuracy = np.sum(predicted_labels == labels)
         return accuracy
     
     def visualize_cost(self):
