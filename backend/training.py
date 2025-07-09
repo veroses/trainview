@@ -2,8 +2,13 @@ from .models import Training_Request
 from .scratch_nn import *
 from .data import get_mnist_loaders
 import numpy as np
+from threading import Event
 
-def train_model(params : Training_Request, training_status):
+
+
+def train_model(params : Training_Request, training_status, stop_event : Event):
+    global stop_training
+
     epochs = params.epochs
     lr = params.learning_rate
     batch_size = params.batch_size
@@ -11,7 +16,7 @@ def train_model(params : Training_Request, training_status):
     beta1 = params.beta1
     beta2 = params.beta2
     optimizer = params.optimizer.lower()
-    layers = [Convolution(1, 4, (3, 3), (1, 1)), Relu(), Pooling((2, 2)), Flatten(), Linear(784, 10), SoftMax()]
+    layers = [Flatten(), Linear(784, 128), Relu(), Linear(128, 10), SoftMax()]
 
     if optimizer == "sgd":
         if momentum:
@@ -39,6 +44,9 @@ def train_model(params : Training_Request, training_status):
         correct = 0
         total_count = 0
         for batch in train_dataloader:
+            if stop_event.is_set():
+                print("training_stopped")
+                return
             batch_inputs, batch_labels = batch
             
 
