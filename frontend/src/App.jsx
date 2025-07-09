@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.jsx
+import React, { useState } from 'react';
+import api from './components/api';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import ChartArea from './components/ChartArea';
+import './App.css';
+import ChartView from './components/ChartView';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [params, setParams] = useState({
+    epochs: 10,
+    learning_rate: 0.01,
+    batch_size: 32,
+    optimizer: 'adam',
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setParams(prev => ({
+      ...prev,
+      [name]: name === 'optimizer' ? value : Number(value),
+    }));
+  }
+
+  function handleStart() {
+    console.log("Sending:", params);
+    setData([])
+    api.post('/start-training', params)
+      .then(res => console.log('Training started:', res.data))
+      .catch(err => console.error('Training error:', err));
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="app-layout">
+      <Sidebar params={params} onChange={handleChange} onStart={handleStart} />
+      <div className="main-content">
+        <Header />
+        <ChartArea />
 
-export default App
+      </div>
+      
+    </div>
+  );
+}
