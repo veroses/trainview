@@ -1,14 +1,14 @@
 import uvicorn
 from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from backend.models import Training_Request, Training_Status_Response
-from backend.training import train_model
+from .models import Training_Request, Training_Status_Response
+from .training import train_model
 
 
 app = FastAPI()
 
 origins  = [
-    "http://localhost:3000"
+    "http://localhost:5173"
 ]
 
 app.add_middleware(
@@ -34,5 +34,7 @@ async def start_training(params : Training_Request, background_tasks : Backgroun
 async def get_training_status():
     return training_status
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+@app.get("/ping")
+async def ping():
+    return {"message" : "pong"}
+
