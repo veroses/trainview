@@ -5,7 +5,6 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import ChartArea from './components/ChartArea';
 import './App.css';
-import ChartView from './components/ChartView';
 
 export default function App() {
   const [params, setParams] = useState({
@@ -14,6 +13,9 @@ export default function App() {
     batch_size: 32,
     optimizer: 'adam',
   });
+
+  const [resetTrigger, setResetTrigger] = useState(0);
+  const [isTraining, setIsTraining] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -25,9 +27,14 @@ export default function App() {
 
   function handleStart() {
     console.log("Sending:", params);
-    setData([])
-    api.post('/start-training', params)
-      .then(res => console.log('Training started:', res.data))
+
+    setIsTraining(false);               // 1. stop polling
+    setResetTrigger(prev => prev + 1);  // 2. clear chart on next render
+
+    api.post('/start-training', params) // 3. restart training
+      .then(() => {
+        setIsTraining(true);            // 4. start polling again
+      })
       .catch(err => console.error('Training error:', err));
   }
 
@@ -36,7 +43,8 @@ export default function App() {
       <Sidebar params={params} onChange={handleChange} onStart={handleStart} />
       <div className="main-content">
         <Header />
-        <ChartArea />
+        <ChartArea reset={resetTrigger} active={isTraining} />
+
 
       </div>
       

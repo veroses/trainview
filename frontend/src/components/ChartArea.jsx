@@ -3,25 +3,34 @@ import api from './api';
 import LossChart from './LossChart';
 import AccuracyChart from './AccuracyChart';
 
-const ChartArea = () => {
+const ChartArea = ({ reset, active }) => {
   const [data, setData] = useState([]);
-  const [lastEpoch, setLastEpoch] = useState(-1);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      api.get('/metrics')
-        .then(res => {
-          const { epoch, loss, accuracy } = res.data;
-          if (epoch > lastEpoch) {
-            setData(prev => [...prev, { epoch, loss, accuracy }]);
-            setLastEpoch(epoch);
-          }
-        })
-        .catch(err => console.error('Polling error:', err));
-    }, 1000);
+    setData([]);
+  }, [reset]);
 
-    return () => clearInterval(interval);
-  }, [lastEpoch]);
+ useEffect(() => {
+  if (!active) return;
+
+  let currentEpoch = -1;
+
+  const interval = setInterval(() => {
+    api.get('/training-status')
+      .then(res => {
+        const { epoch, loss, accuracy } = res.data;
+
+        if (epoch > currentEpoch) {
+          setData(prev => [...prev, { epoch, loss, accuracy }]);
+          currentEpoch = epoch;
+        }
+      })
+      .catch(err => console.error('Polling error:', err));
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [active]);
+
 
   return (
     <div className="chart-grid">
