@@ -20,8 +20,6 @@ export default function Sidebar({ params, onChange, onStart }) {
         <select name="optimizer" value={params.optimizer} onChange={onChange}>
           <option value="adam">adam</option>
           <option value="sgd">sgd</option>
-          <option value="rmsprop">rmsprop</option>
-          <option value="adagrad">adagrad</option>
         </select>
       </label>
       <div className="sidebar-footer">
