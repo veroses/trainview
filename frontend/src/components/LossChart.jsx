@@ -3,7 +3,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 const LossChart = ({ data }) => (
     <div style={{ textAlign: 'center', color: 'black'}}>
     <h3 style={{ marginBottom: '0.5rem' }}>Loss</h3>
-  <LineChart width={400} height={250} data={data}>
+  <LineChart width={480} height={300} data={data}>
     <CartesianGrid strokeDasharray="3 3" />
     <XAxis dataKey="epoch" />
     <YAxis />

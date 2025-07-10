@@ -3,7 +3,8 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color: white;
+  background-color: skyblue;
+  color: black;
   font-family: Arial, sans-serif;
 }
 

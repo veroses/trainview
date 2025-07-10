@@ -23,8 +23,7 @@ export default function Sidebar({ params, onChange, onStart }) {
         </select>
       </label>
       <div className="sidebar-footer">
-        <p>Made by veroses</p>
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer">github</a>
+        <a href="https://github.com/veroses/trainview" target="_blank" rel="noopener noreferrer">github</a>
       </div>
     </div>
   );
