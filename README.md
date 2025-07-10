@@ -16,7 +16,7 @@
 ## Features
 
 - Live training visualization with chart updates per epoch
-- Graceful model restart on repeated training runs
+- Model restart on repeated training runs
 - Clear UI for adjusting basic hyperparameters
 
 ---
