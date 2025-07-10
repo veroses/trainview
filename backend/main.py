@@ -33,7 +33,7 @@ async def root():
 @app.post("/start-training")
 async def start_training(params : Training_Request, background_tasks : BackgroundTasks):
     global training_thread
-    global stop_training
+    global stop_event
 
     if training_thread and training_thread.is_alive():
         print("Stopping previous training...")
@@ -44,7 +44,7 @@ async def start_training(params : Training_Request, background_tasks : Backgroun
 
     stop_event = Event()
     training_status.epoch = 0
-    training_status.loss = 1
+    training_status.loss = 0
     training_status.accuracy = 0
 
     training_thread = Thread(target=train_model, args=(params, training_status, stop_event))

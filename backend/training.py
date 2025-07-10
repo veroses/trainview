@@ -16,7 +16,7 @@ def train_model(params : Training_Request, training_status, stop_event : Event):
     beta1 = params.beta1
     beta2 = params.beta2
     optimizer = params.optimizer.lower()
-    layers = [Flatten(), Linear(784, 128), Relu(), Linear(128, 10), SoftMax()]
+    layers = [Flatten(), Linear(784, 32), Linear(32, 10), SoftMax()]
 
     if optimizer == "sgd":
         if momentum:
